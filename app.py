@@ -8,57 +8,48 @@ st.set_page_config(page_title="Face Detection", page_icon="📷")
 st.title("Face Detection App")
 
 uploaded_file = st.file_uploader(
-    "Upload an image",
-    type=["jpg", "jpeg", "png"]
+"Upload an image",
+type=["jpg", "jpeg", "png"]
 )
 
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    image = np.array(image)
 
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+```
+image = Image.open(uploaded_file).convert("RGB")
+image = np.array(image)
 
-    st.write("Image shape:", image.shape)
-    st.image(cv2.cvtColor(image, cv2.COLOR_BGR2RGB),
-             caption="Uploaded Image")
+st.image(image, caption="Uploaded Image", use_container_width=True)
 
-    face_cascade = cv2.CascadeClassifier(
-        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-    )
+gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+gray = cv2.equalizeHist(gray)
 
-   faces = face_cascade.detectMultiScale(
+face_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+)
+
+faces = face_cascade.detectMultiScale(
     gray,
     scaleFactor=1.05,
-    minNeighbors=3,
-    minSize=(20, 20)
+    minNeighbors=4,
+    minSize=(30, 30)
 )
-    st.write("Faces detected:", len(faces))
-    gray = cv2.equalizeHist(gray)
 
-    for i, (x, y, w, h) in enumerate(faces):
-        cv2.rectangle(
-            image,
-            (x, y),
-            (x + w, y + h),
-            (0, 255, 0),
-            2
-        )
+st.write("Faces detected:", len(faces))
 
-        cv2.putText(
-            image,
-            f"Face {i+1}",
-            (x, y - 10),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.5,
-            (0, 255, 0),
-            2
-        )
+result = image.copy()
 
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    st.image(
-        image_rgb,
-        caption="Detected Faces",
-        use_container_width=True
+for (x, y, w, h) in faces:
+    cv2.rectangle(
+        result,
+        (x, y),
+        (x + w, y + h),
+        (0, 255, 0),
+        3
     )
+
+st.image(
+    result,
+    caption="Detected Faces",
+    use_container_width=True
+)
+```
