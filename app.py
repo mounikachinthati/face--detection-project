@@ -1,11 +1,29 @@
 import streamlit as st
+import cv2
 import numpy as np
 from PIL import Image
-import cv2
+import urllib.request
+import os
 
 st.set_page_config(page_title="Face Detection", page_icon="📷")
 
 st.title("Face Detection App")
+
+# Download DNN model files if missing
+MODEL_FILE = "res10_300x300_ssd_iter_140000.caffemodel"
+CONFIG_FILE = "deploy.prototxt"
+
+if not os.path.exists(MODEL_FILE):
+    urllib.request.urlretrieve(
+        "https://raw.githubusercontent.com/opencv/opencv_3rdparty/dnn_samples_face_detector_20170830/res10_300x300_ssd_iter_140000.caffemodel",
+        MODEL_FILE
+    )
+
+if not os.path.exists(CONFIG_FILE):
+    urllib.request.urlretrieve(
+        "https://raw.githubusercontent.com/opencv/opencv/master/samples/dnn/face_detector/deploy.prototxt",
+        CONFIG_FILE
+    )
 
 uploaded_file = st.file_uploader(
     "Upload an image",
@@ -23,43 +41,49 @@ if uploaded_file is not None:
         width="stretch"
     )
 
-    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    h, w = image.shape[:2]
 
-    face_cascade = cv2.CascadeClassifier(
-        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+    net = cv2.dnn.readNetFromCaffe(
+        CONFIG_FILE,
+        MODEL_FILE
     )
 
-    st.write("Cascade loaded:", not face_cascade.empty())
-    st.write("Image shape:", image.shape)
-
-    faces = face_cascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=4,
-        minSize=(50, 50)
+    blob = cv2.dnn.blobFromImage(
+        cv2.resize(image, (300, 300)),
+        1.0,
+        (300, 300),
+        (104.0, 177.0, 123.0)
     )
 
-    if len(faces) > 0:
-        faces = sorted(
-            faces,
-            key=lambda f: f[2] * f[3],
-            reverse=True
-        )
-        faces = [faces[0]]
-
-    st.write("Faces detected:", len(faces))
-    st.write("Faces object:", faces)
+    net.setInput(blob)
+    detections = net.forward()
 
     result = image.copy()
+    face_count = 0
 
-    for (x, y, w, h) in faces:
-        cv2.rectangle(
-            result,
-            (x, y),
-            (x + w, y + h),
-            (0, 255, 0),
-            3
-        )
+    for i in range(detections.shape[2]):
+
+        confidence = detections[0, 0, i, 2]
+
+        if confidence > 0.5:
+
+            box = detections[0, 0, i, 3:7] * np.array(
+                [w, h, w, h]
+            )
+
+            (x1, y1, x2, y2) = box.astype("int")
+
+            cv2.rectangle(
+                result,
+                (x1, y1),
+                (x2, y2),
+                (0, 255, 0),
+                2
+            )
+
+            face_count += 1
+
+    st.write("Faces detected:", face_count)
 
     st.image(
         result,
