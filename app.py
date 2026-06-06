@@ -28,6 +28,7 @@ if uploaded_file is not None:
         minNeighbors=5,
         minSize=(30, 30)
     )
+    st.write("Faces detected:", len(faces))
 
     for (x, y, w, h) in faces:
         cv2.rectangle(
