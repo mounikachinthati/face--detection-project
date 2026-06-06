@@ -14,6 +14,7 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
+    # Load image
     image = Image.open(uploaded_file).convert("RGB")
     image = np.array(image)
 
@@ -23,27 +24,29 @@ if uploaded_file is not None:
         use_container_width=True
     )
 
+    # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+    # Improve contrast
     gray = cv2.equalizeHist(gray)
 
+    # Load face detector
     face_cascade = cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
     )
 
+    # Detect faces
     faces = face_cascade.detectMultiScale(
-    gray,
-    scaleFactor=1.03,
-    minNeighbors=4,
-    minSize=(80, 80)
-)
-    with mp_face_mesh.FaceMesh(
-    static_image_mode=True,
-    max_num_faces=1,
-    min_detection_confidence=0.5
-) as face_mesh:
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=8,
+        minSize=(120, 120)
+    )
 
+    st.subheader("Detection Results")
     st.write("Faces detected:", len(faces))
 
+    # Draw rectangles
     result = image.copy()
 
     for (x, y, w, h) in faces:
