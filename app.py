@@ -22,25 +22,26 @@ if uploaded_file is not None:
         caption="Uploaded Image",
         width="stretch"
     )
+
+    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    gray = cv2.equalizeHist(gray)
+
     face_cascade = cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
     )
 
     st.write("Cascade loaded:", not face_cascade.empty())
     st.write("Image shape:", image.shape)
-    st.write("Faces object:", faces)    
 
-
-   gray = cv2.equalizeHist(gray)
-
-faces = face_cascade.detectMultiScale(
-    gray,
-    scaleFactor=1.01,
-    minNeighbors=1,
-    minSize=(5, 5)
-)
+    faces = face_cascade.detectMultiScale(
+        gray,
+        scaleFactor=1.01,
+        minNeighbors=1,
+        minSize=(5, 5)
+    )
 
     st.write("Faces detected:", len(faces))
+    st.write("Faces object:", faces)
 
     result = image.copy()
 
