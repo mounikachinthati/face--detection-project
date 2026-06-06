@@ -33,19 +33,18 @@ if uploaded_file is not None:
     st.write("Faces detected:", len(faces))
 
     for (x, y, w, h) in faces:
-    cv2.rectangle(
-        image,
-        (x, y),
-        (x + w, y + h),
-        (0, 255, 0),
-        2
+        cv2.rectangle(
+            image,
+            (x, y),
+            (x + w, y + h),
+            (0, 255, 0),
+            2
+        )
+
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    st.image(
+        image_rgb,
+        caption="Detected Faces",
+        use_container_width=True
     )
-
-# Convert BGR back to RGB for Streamlit
-image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-st.image(
-    image_rgb,
-    caption="Detected Faces",
-    use_container_width=True
-)
