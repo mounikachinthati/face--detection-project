@@ -19,20 +19,22 @@ if uploaded_file is not None:
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+    st.write("Image shape:", image.shape)
+    st.image(cv2.cvtColor(image, cv2.COLOR_BGR2RGB),
+             caption="Uploaded Image")
+
     face_cascade = cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
     )
 
     faces = face_cascade.detectMultiScale(
-    gray,
-    scaleFactor=1.1,
-    minNeighbors=5,
-    minSize=(30, 30)
-)
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(30, 30)
+    )
 
     st.write("Faces detected:", len(faces))
-    st.write("Image shape:", image.shape)
-st.image(image, caption="Uploaded Image")
 
     for i, (x, y, w, h) in enumerate(faces):
         cv2.rectangle(
