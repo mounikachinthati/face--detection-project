@@ -34,6 +34,7 @@ if uploaded_file is not None:
     minSize=(20, 20)
 )
     st.write("Faces detected:", len(faces))
+    gray = cv2.equalizeHist(gray)
 
     for i, (x, y, w, h) in enumerate(faces):
         cv2.rectangle(
