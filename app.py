@@ -36,9 +36,14 @@ if uploaded_file is not None:
     faces = face_cascade.detectMultiScale(
         gray,
         scaleFactor=1.01,
-        minNeighbors=1,
-        minSize=(5, 5)
+        minNeighbors=8,
+        minSize=(100, 100)
     )
+    if len(faces) > 0:
+    faces = sorted(faces, key=lambda f: f[2] * f[3], reverse=True)
+    faces = [faces[0]]
+
+st.write("Faces detected:", len(faces))
 
     st.write("Faces detected:", len(faces))
     st.write("Faces object:", faces)
