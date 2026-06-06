@@ -39,9 +39,9 @@ if uploaded_file is not None:
         minSize=(20, 20)
     )
 
-    st.subheader("Detection Results")
-    st.write("Faces detected:", len(faces))
     st.write("Image shape:", image.shape)
+st.write("Gray shape:", gray.shape)
+st.write("Cascade loaded:", not face_cascade.empty())
 
     result = image.copy()
 
