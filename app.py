@@ -24,11 +24,11 @@ if uploaded_file is not None:
     )
 
     faces = face_cascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=8,
-        minSize=(50, 50)
-    )
+    gray,
+    scaleFactor=1.1,
+    minNeighbors=5,
+    minSize=(30, 30)
+)
 
     st.write("Faces detected:", len(faces))
 
