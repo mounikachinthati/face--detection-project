@@ -41,6 +41,7 @@ if uploaded_file is not None:
 
     st.subheader("Detection Results")
     st.write("Faces detected:", len(faces))
+    st.write("Image shape:", image.shape)
 
     result = image.copy()
 
