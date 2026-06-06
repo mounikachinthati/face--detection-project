@@ -29,6 +29,9 @@ if uploaded_file is not None:
     minSize=(20, 20)
 )
     st.write("Faces detected:", len(faces))
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
 
     for (x, y, w, h) in faces:
         cv2.rectangle(
@@ -41,3 +44,4 @@ if uploaded_file is not None:
 
     st.image(image, caption="Detected Faces", use_container_width=True)
     st.write(f"Faces detected: {len(faces)}")
+   
