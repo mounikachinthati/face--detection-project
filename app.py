@@ -14,40 +14,34 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    # Load image
     image = Image.open(uploaded_file).convert("RGB")
     image = np.array(image)
 
     st.image(
         image,
         caption="Uploaded Image",
-        use_container_width=True
+        width="stretch"
     )
 
-    # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
-    # Improve contrast
     gray = cv2.equalizeHist(gray)
 
-    # Load face detector
-    
     face_cascade = cv2.CascadeClassifier(
-    cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-)
+        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+    )
 
-st.write("Cascade loaded:", not face_cascade.empty())
+    st.write("Cascade loaded:", not face_cascade.empty())
 
-faces = face_cascade.detectMultiScale(
-    gray,
-    scaleFactor=1.1,
-    minNeighbors=3,
-    minSize=(20, 20)
-)
+    faces = face_cascade.detectMultiScale(
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=3,
+        minSize=(20, 20)
+    )
 
-st.write("Faces detected:", len(faces))st.subheader("Detection Results")
+    st.subheader("Detection Results")
+    st.write("Faces detected:", len(faces))
 
-    # Draw rectangles
     result = image.copy()
 
     for (x, y, w, h) in faces:
@@ -62,5 +56,5 @@ st.write("Faces detected:", len(faces))st.subheader("Detection Results")
     st.image(
         result,
         caption="Detected Faces",
-        use_container_width=True
+        width="stretch"
     )
