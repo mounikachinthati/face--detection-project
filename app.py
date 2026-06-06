@@ -31,6 +31,8 @@ if uploaded_file is not None:
 )
 
     st.write("Faces detected:", len(faces))
+    st.write("Image shape:", image.shape)
+st.image(image, caption="Uploaded Image")
 
     for i, (x, y, w, h) in enumerate(faces):
         cv2.rectangle(
