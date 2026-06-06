@@ -24,23 +24,25 @@ if uploaded_file is not None:
     )
 
     faces = face_cascade.detectMultiScale(
-        gray,
-        scaleFactor=1.05,
-        minNeighbors=3,
-        minSize=(20, 20)
-    )
+    gray,
+    scaleFactor=1.1,
+    minNeighbors=8,
+    minSize=(50, 50)
+)
 
     st.write("Faces detected:", len(faces))
 
-    for (x, y, w, h) in faces:
-        cv2.rectangle(
-            image,
-            (x, y),
-            (x + w, y + h),
-            (0, 255, 0),
-            2
-        )
-
+    for i, (x, y, w, h) in enumerate(faces):
+    cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    cv2.putText(
+        image,
+        f"Face {i+1}",
+        (x, y-10),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (0, 255, 0),
+        2
+    )
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     st.image(
