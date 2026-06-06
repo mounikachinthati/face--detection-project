@@ -24,7 +24,6 @@ if uploaded_file is not None:
     )
 
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-    gray = cv2.equalizeHist(gray)
 
     face_cascade = cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
@@ -34,19 +33,20 @@ if uploaded_file is not None:
     st.write("Image shape:", image.shape)
 
     faces = face_cascade.detectMultiScale(
-    gray,
-    scaleFactor=1.1,
-    minNeighbors=4,
-    minSize=(50, 50)
-)
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=4,
+        minSize=(50, 50)
+    )
 
     if len(faces) > 0:
-    faces = sorted(
-        faces,
-        key=lambda f: f[2] * f[3],
-        reverse=True
-    )
-    faces = [faces[0]]
+        faces = sorted(
+            faces,
+            key=lambda f: f[2] * f[3],
+            reverse=True
+        )
+        faces = [faces[0]]
+
     st.write("Faces detected:", len(faces))
     st.write("Faces object:", faces)
 
