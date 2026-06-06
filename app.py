@@ -31,19 +31,21 @@ if uploaded_file is not None:
     gray = cv2.equalizeHist(gray)
 
     # Load face detector
+    
     face_cascade = cv2.CascadeClassifier(
-        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-    )
-
-    # Detect faces
-    faces = face_cascade.detectMultiScale(
-    gray,
-    scaleFactor=1.05,
-    minNeighbors=5,
-    minSize=(50, 50)
+    cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 )
-    st.subheader("Detection Results")
-    st.write("Faces detected:", len(faces))
+
+st.write("Cascade loaded:", not face_cascade.empty())
+
+faces = face_cascade.detectMultiScale(
+    gray,
+    scaleFactor=1.1,
+    minNeighbors=3,
+    minSize=(20, 20)
+)
+
+st.write("Faces detected:", len(faces))st.subheader("Detection Results")
 
     # Draw rectangles
     result = image.copy()
