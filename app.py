@@ -36,6 +36,11 @@ if uploaded_file is not None:
     minNeighbors=4,
     minSize=(80, 80)
 )
+    with mp_face_mesh.FaceMesh(
+    static_image_mode=True,
+    max_num_faces=1,
+    min_detection_confidence=0.5
+) as face_mesh:
 
     st.write("Faces detected:", len(faces))
 
