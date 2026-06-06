@@ -27,13 +27,12 @@ if uploaded_file is not None:
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
     )
 
-    faces = face_cascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30)
-    )
-
+   faces = face_cascade.detectMultiScale(
+    gray,
+    scaleFactor=1.05,
+    minNeighbors=3,
+    minSize=(20, 20)
+)
     st.write("Faces detected:", len(faces))
 
     for i, (x, y, w, h) in enumerate(faces):
